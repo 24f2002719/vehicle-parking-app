@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    {% if not session.get('user_email') %}
+        <h1>Welcome to the Vehicle Parking App</h1>
+        <p>This application allows you to manage vehicle parking efficiently.</p>
+    {% else %}
+        {% if session.get('user_role') == 'admin' %}
+            {% include 'admin_dashboard.html' %}
+        {% else %}
+            {% include 'user_dashboard.html' %}
+        {% endif %}
+    {% endif %}
+    
+ </div>
+{% endblock %}   

@@ -10,8 +10,8 @@ class User(db.Model):
     user_address = db.Column(db.String(250), nullable = True)
     user_pincode = db.Column(db.String(10), nullable = True)
     
-    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable = False)
-    role = db.relationship('Role', backref='users', lazy=True)
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), nullable = True)
+    role = db.relationship('Role', backref='user', lazy=True)
 
 
     reservation  = db.relationship('ReserveParkingSpot', backref='user', lazy=True, uselist=False)

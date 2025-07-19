@@ -5,6 +5,7 @@ from controller.models import *
 
 
 
+
 app = Flask(__name__,template_folder='templates',static_folder='static')
 app.config.from_object(Config)
 # configure the SQLite database, relative to the app instance folder
@@ -18,6 +19,8 @@ with app.app_context():
         admin_role = Role(name='admin')
         user_role = Role(name='user')
         db.session.add_all([admin_role, user_role])
+        
+    admin_role = Role.query.filter_by(name='admin').first()
 
     admin_user = User.query.filter_by(user_email = 'admin@gmail.com').first()
     if not admin_user:
@@ -34,13 +37,9 @@ with app.app_context():
     
     db.session.commit()
 
-@app.route('/')
-def index():
-    return render_template('hello.html')
+from controller.auth_routes import *
+from controller.routes import *
 
-@app.route('/about')
-def about():
-    return "About"
 
 if __name__ == "__main__" :
-    app.run()
+    app.run(debug=True)
