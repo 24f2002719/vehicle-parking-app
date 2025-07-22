@@ -226,134 +226,134 @@ def view_parking_spot(parking_spot_id):
         flash('Access denied! Admins only.', 'error')
         return redirect(url_for('home'))
     
-# @app.route('/reserve_parking_spot/<int:spot_id>', methods=['GET'])
-# def reserve_parking_spot(spot_id):
-#     if 'user_email' not in session:
-#         flash('Please log in to reserve a parking spot.', 'error')
-#         return redirect(url_for('home'))
+@app.route('/reserve_parking_spot/<int:spot_id>', methods=['GET'])
+def reserve_parking_spot(spot_id):
+    if 'user_email' not in session:
+        flash('Please log in to reserve a parking spot.', 'error')
+        return redirect(url_for('home'))
     
-#     reserved_parking_spot = ReserveParkingSpot.query.filter_by(spot_id=spot_id).all()
-#     if not reserved_parking_spot:
-#         flash('Parking spot not found!', 'error')
-#         return redirect(url_for('home'))
+    reserved_parking_spot = ReserveParkingSpot.query.filter_by(spot_id=spot_id).all()
+    if not reserved_parking_spot:
+        flash('Parking spot not found!', 'error')
+        return redirect(url_for('home'))
     
     
-#     return render_template('reserve_parking_spot.html', reserved_parking_spot=reserved_parking_spot)
+    return render_template('reserve_parking_spot.html', reserved_parking_spot=reserved_parking_spot)
 
-# @app.route('/book_parking_spot/<int:lot_id>', methods=['GET', 'POST'])
-# def book_parking_spot(lot_id):
-#     if 'user_email' not in session:
-#         flash('Please log in to book a parking spot.', 'error')
-#         return redirect(url_for('login')) # Redirect to login page
+@app.route('/book_parking_spot/<int:lot_id>', methods=['GET', 'POST'])
+def book_parking_spot(lot_id):
+    if 'user_email' not in session:
+        flash('Please log in to book a parking spot.', 'error')
+        return redirect(url_for('login')) # Redirect to login page
 
-#     # Get the specific spot the user clicked on
-#     spot = ParkingSpot.query.get(lot_id)
+    # Get the specific spot the user clicked on
+    spot = ParkingSpot.query.get(lot_id)
 
-#     parking_lot = ParkingLot.query.get_or_404(lot_id)
-#     available_spot = ParkingSpot.query.filter_by(lot_id=lot_id, status='A').first()
+    parking_lot = ParkingLot.query.get_or_404(lot_id)
+    available_spot = ParkingSpot.query.filter_by(lot_id=lot_id, status='A').first()
 
-#     # Validate the spot
-#     if not available_spot:
-#         flash('Parking spot not found!', 'error')
-#         return redirect(url_for('home'))
+    # Validate the spot
+    if not available_spot:
+        flash('Parking spot not found!', 'error')
+        return redirect(url_for('home'))
     
 
-#     # Get the parent parking lot using the relationship
-#     parking_lot = ParkingLot.query.get(available_spot.lot_id)
-#     parking_timestamp = datetime.now()
+    # Get the parent parking lot using the relationship
+    parking_lot = ParkingLot.query.get(available_spot.lot_id)
+    parking_timestamp = datetime.now()
 
 
-#     if request.method == 'GET':
-#         # Pass the specific spot and its lot to the template
-#         return render_template('book_parking_spot.html', spot=available_spot, parking_lot=parking_lot,parking_timestamp=parking_timestamp)
+    if request.method == 'GET':
+        # Pass the specific spot and its lot to the template
+        return render_template('book_parking_spot.html', spot=available_spot, parking_lot=parking_lot,parking_timestamp=parking_timestamp)
 
-#     if request.method == 'POST':
-#         vehicle_no = request.form.get('vehicle_no')
-#         duration_str = request.form.get('duration') # Duration in hours
+    if request.method == 'POST':
+        vehicle_no = request.form.get('vehicle_no')
+        duration_str = request.form.get('duration') # Duration in hours
         
 
-#         if not vehicle_no or not duration_str:
-#             flash('Vehicle number and duration are required!', 'error')
-#             return redirect(url_for('book_parking_spot', lot_id=lot_id))
+        if not vehicle_no or not duration_str:
+            flash('Vehicle number and duration are required!', 'error')
+            return redirect(url_for('book_parking_spot', lot_id=lot_id))
 
-#         try:
-#             duration_hours = int(duration_str)
-#             if duration_hours <= 0:
-#                 raise ValueError
-#         except ValueError:
-#             flash('Please enter a valid, positive number for the duration.', 'error')
-#             return redirect(url_for('book_parking_spot', lot_id=lot_id))
+        try:
+            duration_hours = int(duration_str)
+            if duration_hours <= 0:
+                raise ValueError
+        except ValueError:
+            flash('Please enter a valid, positive number for the duration.', 'error')
+            return redirect(url_for('book_parking_spot', lot_id=lot_id))
 
-#         # Create the new reservation
-#         new_reservation = ReserveParkingSpot(
-#             spot_id=available_spot.id,
-#             lot_id=parking_lot.id,
-#             vehicle_no=vehicle_no,
-#             address = parking_lot.address,
-#             pincode = parking_lot.pincode,
-#             user_id=session['user_id'], # Get user_id from the session
-#             parking_timestamp=parking_timestamp,
-#             leaving_timestamp=None,
-#             parking_cost =parking_lot.price/60 # Get price from the lot
-#         )
+        # Create the new reservation
+        new_reservation = ReserveParkingSpot(
+            spot_id=available_spot.id,
+            lot_id=parking_lot.id,
+            vehicle_no=vehicle_no,
+            address = parking_lot.address,
+            pincode = parking_lot.pincode,
+            user_id=session['user_id'], # Get user_id from the session
+            parking_timestamp=parking_timestamp,
+            leaving_timestamp=None,
+            parking_cost =parking_lot.price/60 # Get price from the lot
+        )
 
 
-#         # Update the spot's status to 'Occupied'
-#         available_spot.status = 'O'
+        # Update the spot's status to 'Occupied'
+        available_spot.status = 'O'
         
-#         db.session.add(new_reservation)
-#         db.session.commit()
+        db.session.add(new_reservation)
+        db.session.commit()
 
-#         flash('Parking spot booked successfully!', 'success')
-#         return redirect(url_for('home'))
+        flash('Parking spot booked successfully!', 'success')
+        return redirect(url_for('home'))
 
 
 
-# @app.route("/release_parking/<int:reservation_id>", methods=['GET', 'POST'])
-# def release_parking(reservation_id):
-#     if 'user_email' not in session:
-#         flash('Please log in to release a parking spot.', 'error')
-#         return redirect(url_for('home'))
-#     reservation = ReserveParkingSpot.query.get(reservation_id)
-#     if not reservation:
-#         flash('Reservation not found!', 'error')
-#         return redirect(url_for('home'))
+@app.route("/release_parking/<int:reservation_id>", methods=['GET', 'POST'])
+def release_parking(reservation_id):
+    if 'user_email' not in session:
+        flash('Please log in to release a parking spot.', 'error')
+        return redirect(url_for('home'))
+    reservation = ReserveParkingSpot.query.get(reservation_id)
+    if not reservation:
+        flash('Reservation not found!', 'error')
+        return redirect(url_for('home'))
     
-#     release_time_str = request.form.get('release_timestamp')
-#     # release_time = datetime.strptime(release_time_str, '%Y-%m-%dT%H:%M') if release_time_str else datetime.now()
-#     reservation.leaving_timestamp = datetime.now()
-#     # print(reservation.leaving_timestamp)
+    release_time_str = request.form.get('release_timestamp')
+    # release_time = datetime.strptime(release_time_str, '%Y-%m-%dT%H:%M') if release_time_str else datetime.now()
+    reservation.leaving_timestamp = datetime.now()
+    # print(reservation.leaving_timestamp)
 
-#     time_diff = reservation.leaving_timestamp - reservation.parking_timestamp
+    time_diff = reservation.leaving_timestamp - reservation.parking_timestamp
     
-#     min = time_diff.total_seconds() / 60
-#     cost = round(min,2)*reservation.parking_cost
-#     int(cost)
-#     # charged_hours = int(hours) + (1 if hours % 1 > 0 else 0)  # Round up partial hour
-#     # total_cost = charged_hours * float(reservation.parking_cost)
+    min = time_diff.total_seconds() / 60
+    cost = round(min,2)*reservation.parking_cost
+    int(cost)
+    # charged_hours = int(hours) + (1 if hours % 1 > 0 else 0)  # Round up partial hour
+    # total_cost = charged_hours * float(reservation.parking_cost)
 
-#     if request.method == 'GET':
-#         return render_template('release_parking.html', reserve=reservation,cost=cost)
-#     if request.method == 'POST':
-#         # Update the parking spot status to 'Available'
-#         spot = ParkingSpot.query.get(reservation.spot_id)
+    if request.method == 'GET':
+        return render_template('release_parking.html', reserve=reservation,cost=cost)
+    if request.method == 'POST':
+        # Update the parking spot status to 'Available'
+        spot = ParkingSpot.query.get(reservation.spot_id)
 
         
 
-#         if spot:
-#             spot.status = 'A'
-#             db.session.commit()
+        if spot:
+            spot.status = 'A'
+            db.session.commit()
 
             
 
         
-#             # After releasing the spot, reserving time showed in user.dashboard and release button convert into 'Parked Out'
-#             # reservation.leaving_timestamp = release_time
-#             reservation.parking_cost = cost
-#             db.session.commit()
+            # After releasing the spot, reserving time showed in user.dashboard and release button convert into 'Parked Out'
+            # reservation.leaving_timestamp = release_time
+            reservation.parking_cost = cost
+            db.session.commit()
             
-#             flash('Parking spot released successfully!', 'success')
-#             return redirect(url_for('home'))
+            flash('Parking spot released successfully!', 'success')
+            return redirect(url_for('home'))
 
 
     

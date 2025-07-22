@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Release Parking Spot{% endblock %}
+
+{% block content %}
+<div class="container-fluid min-vh-100 d-flex justify-content-center align-items-center">
+    <div class="card p-3 shadow-sm w-100 rounded-4" style="max-width: 500px;">
+        <h3 class="text-center mb-4">Release the parking spot</h3>
+
+        <form method="POST" action={{ url_for('release_parking', reservation_id = reserve.id) }}>
+
+            <div class="mb-2">
+                <label for="spot_id" class="form-label">Spot ID : </label>
+                <input type="text" class="form-control" id="spot_id" name="spot_id" value="{{ reserve.spot.id }} " readonly>
+            </div>
+
+            <div class="mb-2">
+                <label for="vehicle_no" class="form-label">Vehicle Number : </label>
+                <input class="form-control" id="vehicle_no" name="vehicle_no" value="{{ reserve.vehicle_no }}" readonly></input>
+
+            </div>
+            <div class="mb-2">
+                <label for="parking_timestamp" class="form-label">Parking time : </label>
+                <input class="form-control" id="parking_timestamp" name="parking_timestamp" value="{{ reserve.parking_timestamp }}" readonly></input>
+
+            </div>
+            <div class="mb-2">
+                <label for="release_timestamp" class="form-label">Releasing time:</label>
+                <input type="text" class="form-control" id="release_timestamp" name="release_timestamp" value="{{ reserve.leaving_timestamp }}" readonly>
+            </div>
+
+            
+
+            <div class="mb-2">
+                <label for="total_cost" class="form-label">Total cost : </label>
+                <input class="form-control" id="total_cost" name="total_cost" value="{{ cost }}" readonly></input>
+
+            </div>
+            
+
+
+
+            <div class="d-grid mb-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle me-1"></i>Release
+                </button>
+            </div>
+            <div class="d-grid">
+                <a href="{{ url_for('home') }}" class="btn btn-danger">
+                    <i class="bi bi-x-circle me-1"></i>Cancel
+                </a>
+            </div>
+
+
+
+        </form>
+
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<!-- <script>
+window.addEventListener('DOMContentLoaded', () => {
+const now = new Date();
+const formatted = now.toISOString().slice(0, 16);  // yyyy-MM-ddTHH:mm
+document.getElementById('release_timestamp').value = formatted;
+});
+</script> -->
+{% endblock %}

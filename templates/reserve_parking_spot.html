@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}Occupied Parking Spot Details{% endblock %}
+
+{% block content %}
+<div class="container-fluid min-vh-100 d-flex justify-content-center align-items-center">
+    <div class="card p-3 shadow-sm w-100 rounded-4" style="max-width: 500px;">
+        <h3 class="text-center mb-4">Occupied Parking Spot Details</h3>
+
+        {% for reserve in reserved_parking_spot %}
+
+        <div class="mb-2">
+            <label for="ID" class="form-label">ID : </label>
+            <input type="text" class="form-control" id="ID" name="ID" value="{{ reserve.spot_id }}" readonly>
+        </div>
+
+        <div class="mb-2">
+            <label for="cust_id" class="form-label">Customer ID :  </label>
+            <input type="text" class="form-control" id="cust_id" name="cust_id" value="{{ reserve.id }}" readonly>
+        </div>
+        <div class="mb-2">
+            <label for="vehicle_no" class="form-label">Vehicle Number :  </label>
+            <input type="text" class="form-control" id="vehicle_no" name="vehicle_no" value="{{ reserve.vehicle_no }}" readonly>
+        </div>
+        <div class="mb-2">
+            <label for="parking_timestamp" class="form-label">Date/Time of Parking :  </label>
+            <input type="text" class="form-control" id="parking_timestamp" name="parking_timestamp" value="{{ reserve.parking_timestamp }}" readonly>
+        </div>
+        <div class="mb-2">
+            <label for="leaving_timestamp" class="form-label">Leaving Time of Parking :  </label>
+            <input type="text" class="form-control" id="leaving_timestamp" name="leaving_timestamp" value="{{ reserve.leaving_timestamp }}" readonly>
+        </div>
+        <div class="mb-2">
+            <label for="parking_cost" class="form-label">Est. Parking Cost :  </label>
+            <input type="text" class="form-control" id="parking_cost" name="parking_cost" value="{{ reserve.parking_cost }}" readonly>
+        </div>
+
+        <div class="d-grid">
+            <a href="{{ url_for('home') }}" class="btn btn-danger">
+                <i class="bi bi-x-circle me-1"></i>Cancel
+            </a>
+        </div>
+        {% endfor %}
+
+        
+
+    </div>
+</div>
+{% endblock %}
