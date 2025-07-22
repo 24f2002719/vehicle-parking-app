@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Add Parking Lot{% endblock %}
+
+{% block content %}
+<div class="container-fluid min-vh-100 d-flex justify-content-center align-items-center">
+    <div class="card p-3 shadow-sm w-100" style="max-width: 500px;">
+        <h3 class="text-center mb-2">New Parking Lot</h3>
+        <form method="POST" action="/add_parking_lot">
+            
+            <div class="mb-2">
+                <label for="location" class="form-label">Prime Location Name : </label>
+                <input type="text" class="form-control" id="location" name="location" placeholder="Enter location">
+            </div>
+
+            <div class="mb-2">
+                <label for="address" class="form-label">Address: </label>
+                <textarea class="form-control" id="address" name="address" placeholder="Enter your address" rows="2"></textarea>
+            </div>
+            <div class="mb-2">
+                <label for="pincode" class="form-label">Pincode: </label>
+                <input type="text" class="form-control" id="pincode" name="pincode" placeholder="Enter pincode">
+            </div>
+            <div class="mb-2">
+                <label for="price" class="form-label">Price (per hour): </label>
+                <input type="text" class="form-control" id="price" name="price" placeholder="Enter Price">
+            </div>
+            <div class="mb-2">
+                <label for="max_spots" class="form-label">Maximum Spots: </label>
+                <input type="text" class="form-control" id="max_spots" name="max_spots" placeholder="Enter maximum spots">
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

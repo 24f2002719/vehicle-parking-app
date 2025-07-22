@@ -1,3 +1,75 @@
-<div>
-    <h1>Welcome {{ session.get('user_role')}}</h1>
+<div class="container mt-5">
+    <!-- Welcome Heading -->
+    <div class="alert alert-primary d-flex justify-content-between align-items-center shadow-sm">
+        <h4 class="mb-0">
+            <i class="bi bi-person-badge-fill me-2"></i>Welcome, Admin
+        </h4>
+    </div>
+
+    <!-- Dashboard Header with Button -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Admin Dashboard</h2>
+        <a href="{{ url_for('add_parking_lot') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i> Add Parking Lot
+        </a>
+    </div>
+
+    <!-- Parking Lots Section -->
+    <div class="mb-4 bg-white p-4">
+        <h3 class=" mb-4 text-center text-primary bg-white p-2">Parking Lots</h3>
+        <div class="row">
+            {% for lot in parking_lots %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card shadow border-0 h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">{{ lot.prime_location_name }}</h5>
+
+                        <!-- Edit | Delete links -->
+                        <div class="mb-3">
+                            <a href="{{ url_for("edit_parking_lot",parking_lot_id=lot.id )}}"
+                                class="text-warning fw-bold me-3">Edit</a>|
+                            <a href="{{ url_for("delete_parking_lot",parking_lot_id=lot.id )}}"
+                                class="text-danger fw-bold">Delete</a>
+                        </div>
+
+                        <p class="card-text">
+                            <strong>Address:</strong> {{ lot.address }}, {{ lot.pincode }}<br>
+                            <strong>Price:</strong> {{ lot.price }} per unit
+                        </p>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span>
+                                <strong>Occupied:</strong>
+                                <!-- Access the new attribute for occupied spots -->
+                                <span class="text-danger fw-bold">{{ lot.occupied_spots }}</span> /
+                                <!-- Access the new attribute for total spots -->
+                                <span class="fw-bold">{{ lot.total_spots }}</span>
+                            </span>
+                        </div>
+
+                        <!-- Visual Spot Grid -->
+                        <div class="d-flex flex-wrap gap-2 mt-3 p-2">
+                            {% for spot in spot | selectattr('lot_id', 'equalto', lot.id) %}
+                            {% if spot.status == 'O' %}
+                            <!-- Occupied -->
+                            <a href="{{ url_for("view_parking_spot", parking_spot_id=spot.id)}}"
+                                class="bg-danger text-white rounded d-flex justify-content-center align-items-center text-decoration-none"
+                                style="width: 40px; height: 40px; font-weight: bold; user-select: none;">{{ spot.status
+                                }}</a>
+                            {% else %}
+                            <!-- Available -->
+                            <a href="{{ url_for("view_parking_spot", parking_spot_id=spot.id)}}"
+                                class="bg-success text-white rounded d-flex justify-content-center align-items-center text-decoration-none"
+                                style="width: 40px; height: 40px; font-weight: bold; user-select: none;">{{ spot.status
+                                }}</a>
+                            {% endif %}
+                            {% endfor %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>

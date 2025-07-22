@@ -41,6 +41,7 @@ def login():
         
         session['user_email'] = user.user_email
         session['user_role'] = user.role.name
+        session['user_id'] = user.user_id 
         flash('Login successful!', 'success')
 
 

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}View Parking Spot{% endblock %}
+
+{% block content %}
+<div class="container-fluid min-vh-100 d-flex justify-content-center align-items-center">
+    <div class="card p-3 shadow-sm w-100 rounded-4" style="max-width: 500px;">
+        <h3 class="text-center mb-4">View/Delete Parking Spot</h3>
+
+        <form method="POST" action={{ url_for('view_parking_spot', parking_spot_id=parking_spot.id) }}>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="spot_id" class="form-label">ID:</label>
+                    <input type="text" class="form-control" id="spot_id" name="spot_id" value="{{ parking_spot.id }}"
+                        readonly>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="status" class="form-label">Status:</label>
+                    {% if parking_spot.status == "A" %}
+                    <a href="" id="status" name="status"
+                        class="form-control bg-{{ 'success' if parking_spot.status == 'A' else 'danger' }} text-white text-center d-block text-decoration-none">
+                        {{ parking_spot.status }}
+                    </a>
+                    {% else %}
+                    <a href={{ url_for('reserve_parking_spot', spot_id = parking_spot.id)}} id="status" name="status"
+                        class="form-control bg-danger text-white text-center d-block text-decoration-none">
+                        {{ parking_spot.status }}
+                    </a>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+
+            <div class="d-grid mb-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle me-1"></i>Delete
+                </button>
+            </div>
+            <div class="d-grid">
+                <a href="{{ url_for('home') }}" class="btn btn-danger">
+                    <i class="bi bi-x-circle me-1"></i>Cancel
+                </a>
+            </div>
+
+
+
+        </form>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,3 +1,104 @@
-<div>
-    <h1>Welcome {{ session.get('user_role')}}</h1>
+<div class="container mt-5">
+    <!-- Welcome Heading -->
+    <div class="alert alert-primary d-flex justify-content-between align-items-center shadow-sm">
+        <h4 class="mb-0">
+            <i class="bi bi-person-badge-fill me-2"></i>Welcome, User
+        </h4>
+    </div>
+
+    <!-- Parking History Section -->
+     <div class="card shadow-sm">
+        <div class="card-header bg-white">
+            <h5 class="mb-0 text-primary text-center mb-2 mt-2">
+                <i class="bi bi-people-fill me-2"></i>Recent Parking History
+            </h5>
+        </div>
+
+        <div class="card-body p-2">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-2 align-middle table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Address</th>
+                            <th>Vehicle No.</th>
+                            <th>Spot ID.</th>
+                            <th>Parking Time</th>
+                            <th>Leaving Time</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                    {% for reserve in reserve %}
+                    
+                        <tr>
+                            <td>{{ reserve.id }}</td>
+                            <td>{{ reserve.address }}, {{ reserve.pincode }}</td>
+                            <td>{{ reserve.vehicle_no }}</td>
+                            <td>{{ reserve.spot.id}}</td>
+                            <td>{{ reserve.parking_timestamp }}</td>
+                            <td>
+                                {% if reserve.leaving_timestamp %}
+                                    {{ reserve.leaving_timestamp }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if not reserve.leaving_timestamp %}
+                                    <a href="{{ url_for('release_parking', reservation_id=reserve.id) }}" class="btn btn-primary">Release</a>
+                                {% else %}
+                                    <button class="btn btn-secondary" disabled>Parked Out</button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    
+    <!-- Parking Lots Section -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-white">
+            <h5 class="mb-0 text-primary text-center mb-2 mt-2">
+                <i class="bi bi-people-fill me-2"></i>Parking Lots
+            </h5>
+        </div>
+
+
+        <div class="card-body p-2">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-2 align-middle table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Address</th>
+                            <th>Availability</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        {% for lot in parking_lots %}
+                        <tr>
+                            <td>{{ lot.id }}</td>
+                            <td>{{ lot.prime_location_name }}</td>
+                            <td>{{ lot.address }}, {{ lot.pincode}}</td>
+                            <td><span class="text-danger fw-bold">{{ lot.occupied_spots }}</span> /
+                                <span class="fw-bold">{{ lot.total_spots }}</span>
+                            </td>
+                            
+                            <td><a href="{{ url_for('book_parking_spot', lot_id=lot.id) }}" class="btn btn-primary"> Book </button></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>

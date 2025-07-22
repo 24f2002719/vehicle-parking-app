@@ -1,26 +1,48 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
   <div class="container">
-    <!-- App Brand (also acts as Home link) -->
-    <a class="navbar-brand fw-bold text-primary" href="/">
+    <a class="navbar-brand fw-bold text-primary" href={{ url_for('home') }}>
       <i class="bi bi-truck-front-fill me-2"></i>Vehicle Parking App
     </a>
-
-    <!-- Navbar Toggler (Mobile) -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" 
-            aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+      aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <!-- Collapsible Content -->
     <div class="collapse navbar-collapse" id="navbarContent">
-      <!-- Right Side Buttons Only -->
-      <div class="ms-auto d-flex">
-        <a href="/login" class="btn btn-outline-primary me-2">
+      <div class="ms-auto d-flex align-items-center">
+
+        {% if not session.get("user_email") %}
+        <a href="{{ url_for('login') }}" class="btn btn-outline-primary me-2">
           <i class="bi bi-box-arrow-in-right me-1"></i>Login
         </a>
-        <a href="/signup" class="btn btn-primary">
+        <a href="{{ url_for('signup') }}" class="btn btn-primary">
           <i class="bi bi-person-plus-fill me-1"></i>Sign Up
         </a>
+        {% else %}
+        <a href="{{ url_for('home') }}" class="btn btn-outline-primary me-2">
+          <i class="bi bi-house-door-fill me-1"></i>Home
+        </a>
+        {% if session.get("user_role") == "admin" %}
+        <a href="{{ url_for('users') }}" class="btn btn-outline-secondary me-2">
+          <i class="bi bi-people-fill me-1"></i>Users
+        </a>
+        <a href="/admin/search" class="btn btn-outline-info me-2">
+          <i class="bi bi-search me-1"></i>Search
+        </a>
+        
+        {% else %}
+        
+        {% endif %}
+        {% if session.get('user_id') %}
+        <a href="{{ url_for('edit_profile', user_id=session.get('user_id')) }}" class="btn btn-outline-dark me-2">
+          <i class="bi bi-person-circle me-1"></i>Edit Profile
+        </a>
+        {% endif %}
+        <a href="{{ url_for('logout') }}" class="btn btn-danger">
+          <i class="bi bi-box-arrow-right me-1"></i>Logout
+        </a>
+        {% endif %}
+
       </div>
     </div>
   </div>
