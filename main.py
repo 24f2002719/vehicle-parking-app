@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from controller.database import db
 from controller.config import Config
-from controller.models import *
+from models.models import *
 
 
 

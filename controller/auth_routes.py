@@ -1,6 +1,6 @@
 from main import app
 from flask import render_template, redirect,request,flash,session,url_for
-from controller.models import *
+from models.models import *
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

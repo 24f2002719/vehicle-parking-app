@@ -1,6 +1,6 @@
 from main import app
 from flask import render_template, redirect,request,flash,session,url_for
-from controller.models import *
+from models.models import *
 from datetime import datetime, timedelta
 from sqlalchemy import func
 
