@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container mt-5 bg-white rounded ">
+
+    <!-- Search Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4 p-2">
+        <h2 class="fw-bold">Search</h2>
+    </div>
+
+    <div class="container-fluid bg-white py-4 px-3 mb-4 shadow-sm rounded">
+        <h5 class="text-center text-primary border border-primary p-2 rounded">
+            Search by User ID / Parking Lot Name / Address / Pincode
+        </h5>
+
+        <form action="" method="GET">
+            <div class="input-group mt-3">
+                <select name="parameter" id="parameter" class="form-select">
+                    <option value="user_id">User ID</option>
+                    <option value="lot_name">Parking Lot Name</option>
+                    <option value="address">Address</option>
+                    <option value="pincode">Pin Code</option>
+                </select>
+
+                <input type="text" name="query" class="form-control" placeholder="Search for..." />
+                <button class="btn btn-primary" type="submit">Search</button>
+                <a class="btn btn-danger" href="{{ url_for('search_admin') }}">Clear</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Parking Lots Section -->
+    {% if parking_lots %}
+    <div class="bg-white p-4 mb-5 shadow-sm rounded">
+        <h3 class="text-center text-primary mb-4">Parking Lots</h3>
+        <div class="row">
+            {% for lot in parking_lots %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card shadow border-0 h-100">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">{{ lot.prime_location_name }}</h5>
+
+                        <div class="mb-3">
+                            <a href="{{ url_for("edit_parking_lot", parking_lot_id=lot.id) }}"
+                               class="text-warning fw-bold me-3">Edit</a> |
+                            <a href="{{ url_for("delete_parking_lot", parking_lot_id=lot.id) }}"
+                               class="text-danger fw-bold">Delete</a>
+                        </div>
+
+                        <p class="card-text">
+                            <strong>Address:</strong> {{ lot.address }}, {{ lot.pincode }}<br>
+                            <strong>Price:</strong> {{ lot.price }} per unit
+                        </p>
+
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span>
+                                <strong>Occupied:</strong>
+                                <span class="text-danger fw-bold">{{ lot.occupied_spots }}</span> /
+                                <span class="fw-bold">{{ lot.total_spots }}</span>
+                            </span>
+                        </div>
+
+                        <!-- Visual Spot Grid -->
+                        <div class="d-flex flex-wrap gap-2 mt-3 p-2">
+                            {% for spot in spot | selectattr('lot_id', 'equalto', lot.id) %}
+                                {% if spot.status == 'O' %}
+                                <a href="{{ url_for("view_parking_spot", parking_spot_id=spot.id) }}"
+                                   class="bg-danger text-white rounded d-flex justify-content-center align-items-center text-decoration-none"
+                                   style="width: 40px; height: 40px; font-weight: bold;">{{ spot.status }}</a>
+                                {% else %}
+                                <a href="{{ url_for("view_parking_spot", parking_spot_id=spot.id) }}"
+                                   class="bg-success text-white rounded d-flex justify-content-center align-items-center text-decoration-none"
+                                   style="width: 40px; height: 40px; font-weight: bold;">{{ spot.status }}</a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Registered Users Section -->
+    {% if users %}
+    <div class=" mb-5 p-2">
+        <div class="card-header">
+            <h5 class="text-primary text-center my-2">
+                <i class="bi bi-people-fill me-2"></i>Registered Users
+            </h5>
+        </div>
+
+        <div class="card-body p-2   ">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped align-middle table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Email</th>
+                            <th>Full Name</th>
+                            <th>Address</th>
+                            <th>Pin Code</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ user.user_email }}</td>
+                            <td>{{ user.user_name }}</td>
+                            <td>{{ user.user_address }}</td>
+                            <td>{{ user.user_pincode }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}  

@@ -27,7 +27,7 @@ def home():
             parameter = request.args.get('parameter')
             query = request.args.get('query')
 
-            if query:
+            if parameter=='lot_name':
                 lots = ParkingLot.query.filter(ParkingLot.prime_location_name.ilike(f'%{query}%'))
             elif parameter == 'address':
                 lots = ParkingLot.query.filter(ParkingLot.address.ilike(f'%{query}%'))
@@ -498,3 +498,43 @@ def summary_user():
         reserve_parking_spots=reserve_parking_spots,
         user_id=user_id,duration=duration,usage_labels=spot_labels,
         usage_values=spot_usage_counts)
+
+
+@app.route('/search_admin')
+def search_admin():
+    if 'user_email' in session:
+        if session.get('user_role', None) == 'admin':
+            lots = ParkingLot.query.all()
+            
+
+            spot = ParkingSpot.query.all()
+            
+
+            parameter = request.args.get('parameter')
+            query = request.args.get('query')
+
+            if parameter=='lot_name' or parameter == 'address' or parameter == 'pincode':
+                if parameter=='lot_name':
+                    lots = ParkingLot.query.filter(ParkingLot.prime_location_name.ilike(f'%{query}%'))
+                elif parameter == 'address':
+                    lots = ParkingLot.query.filter(ParkingLot.address.ilike(f'%{query}%'))
+                elif parameter == 'pincode':
+                    lots = ParkingLot.query.filter(ParkingLot.pincode.ilike(f'%{query}%'))
+
+                for lot in lots:
+                    total_spots = ParkingSpot.query.filter_by(lot_id=lot.id).count()
+                    occupied_spots = ParkingSpot.query.filter_by(lot_id=lot.id, status='O').count()
+                    lot.total_spots = total_spots
+                    lot.occupied_spots = occupied_spots     
+
+                return render_template("search_admin.html", parking_lots=lots,spot=spot)
+            elif parameter=="user_id":
+                if 'user_email' not in session or session.get('user_role',None) != 'admin':
+                    flash('Access denied! Admins only.', 'error')
+                    return redirect(url_for('home'))
+                else:
+                    users = User.query.filter(User.role_id != 1 ).all()
+                    return render_template('search_admin.html', users=users)
+            return render_template('search_admin.html')
+
+    
