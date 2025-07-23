@@ -84,14 +84,11 @@
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Log the data received from Flask to the browser console
+    
     const labels = {{ usage_labels|tojson }};
     const values = {{ usage_values|tojson }};
 
-    console.log("Labels received by JavaScript:", labels);
-    console.log("Values received by JavaScript:", values);
 
-    // Check if there is data to display
     if (labels.length > 0) {
         const ctx = document.getElementById('spotUsageChart').getContext('2d');
         const spotUsageChart = new Chart(ctx, {
@@ -111,7 +108,7 @@
                     y: {
                         beginAtZero: true,
                         ticks: {
-                            // Ensure Y-axis only shows whole numbers for counts
+                            
                             stepSize: 1
                         },
                         title: {
@@ -129,13 +126,13 @@
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Summary of Your Parking Spot Usage'
+                        text: 'Summary of Parking Spot Usage'
                     }
                 }
             }
         });
     } else {
-        // Optional: Display a message if there's no chart data
+        
         const chartArea = document.getElementById('spotUsageChart');
         const parent = chartArea.parentNode;
         parent.innerHTML = "<p class='text-center'>No parking usage data available to display a chart.</p>";

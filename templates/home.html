@@ -4,8 +4,18 @@
 {% block content %}
 <div class="container mt-5">
     {% if not session.get('user_email',None) %}
-        <h1>Welcome to the Vehicle Parking App</h1>
-        <p>This application allows you to manage vehicle parking efficiently.</p>
+    <div class="container d-flex align-items-center justify-content-center" style="min-height: 80vh;">
+    <div class="text-center bg-white bg-opacity-75 p-5 rounded shadow" style="max-width: 600px; width: 100%;">
+        <h1 class="display-9 fw-bold text-primary mb-3">Welcome to Vehicle Parking App</h1>
+        <p class="lead text-secondary mb-4">
+            Simplify your vehicle parking experience with our smart solution. 
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">Get Started</a>
+            <a href="{{ url_for('signup') }}" class="btn btn-outline-primary btn-lg">Sign Up</a>
+        </div>
+    </div>
+    </div>
     {% else %}
         {% if session.get('user_role',None) == 'admin' %}
             {% include 'admin_dashboard.html' %}

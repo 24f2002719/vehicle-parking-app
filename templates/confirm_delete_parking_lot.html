@@ -5,7 +5,7 @@
 <div class="container-fluid min-vh-100 d-flex justify-content-center align-items-center">
   <div class="card p-3 shadow-sm w-400 rounded-4" style="max-width: 500px;">
 
-        <!-- Alert message -->
+        
         <div class="alert alert-warning" role="alert">
             <h4 class="alert-heading">Confirm Delete</h4>
             <p>Are you sure you want to delete the parking lot <strong>{{ parking_lot.prime_location_name }}</strong>?</p>
@@ -13,7 +13,7 @@
             <p class="mb-0">This action cannot be undone.</p>
         </div>
 
-        <!-- Confirm/Delete Form -->
+        
         <form action="{{ url_for('delete_parking_lot', parking_lot_id=parking_lot.id) }}" method="POST">
             <button type="submit" class="btn btn-danger">Confirm Delete</button>
             <a href="{{ url_for('home') }}" class="btn btn-secondary">Cancel</a>

@@ -15,7 +15,6 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
 
-        #Data Validation
         if not email or not password:
             flash('Please enter email and password!!', 'error')
             return redirect(url_for('login'))
@@ -71,7 +70,6 @@ def signup():
         address = request.form.get('address')
         pincode = request.form.get('pincode')
 
-        #Data Validation
         if not email or not password :
             flash('All fields are compulsory!', 'error')
             return redirect(url_for('signup'))
@@ -88,13 +86,11 @@ def signup():
             flash("Password and Confirm Password doesn't match!")
             return redirect(url_for('signup'))
 
-        # Check if user already exists
         user = User.query.filter_by(user_email=email).first()
         if user:
             flash('User already exists! Please log in.', 'error')
             return redirect(url_for('login'))
 
-        # Create new user
         role = Role.query.filter_by(name='user').first()
         user = User(
             user_email=email,
@@ -102,7 +98,7 @@ def signup():
             user_name=name,
             user_address=address,
             user_pincode=pincode,
-            role_id=role.id if role else 2  # Fallback to 2 if 'user' role not found
+            role_id=role.id if role else 2  
         
         )
         

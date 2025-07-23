@@ -4,12 +4,9 @@ from controller.config import Config
 from models.models import *
 
 
-
-
 app = Flask(__name__,template_folder='templates',static_folder='static')
 app.config.from_object(Config)
-# configure the SQLite database, relative to the app instance folder
-# app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///database.sqlite3'
+
 db.init_app(app)
 
 with app.app_context():
@@ -28,8 +25,8 @@ with app.app_context():
             user_email = 'admin@gmail.com',
             user_password = 'admin123',
             user_name = 'Admin',
-            # user_address = 'Admin Address',
-            # user_pincode = '123456',
+            user_address = 'Admin Address',
+            user_pincode = '123456',
             role = admin_role
             )
         db.session.add(admin_user)

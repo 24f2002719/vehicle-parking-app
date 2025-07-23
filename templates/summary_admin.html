@@ -59,11 +59,6 @@
             </div>
         </div>
 
-
-        <!-- Now I want to add statstics graphs  
-        1.Revenue From Each Parking Lot
-        2.Summary on available and occupied parking spots 
-        -->
         <div class="card shadow-sm mt-4">
             <div class="card-header bg-white text-center">
                 <h5 class="mb-0 text-primary">
@@ -93,7 +88,7 @@
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Bar Chart: Revenue
+    
     const revenueCtx = document.getElementById('revenueChart').getContext('2d');
     new Chart(revenueCtx, {
         type: 'bar',
@@ -115,7 +110,7 @@
         }
     });
 
-    // Pie Chart: Parking Spot Status
+
     const statusCtx = document.getElementById('statusChart').getContext('2d');
     new Chart(statusCtx, {
         type: 'pie',
