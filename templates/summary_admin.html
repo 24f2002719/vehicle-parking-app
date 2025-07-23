@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% block title %}Summary{% endblock %}
+
+{% block content %}
+<div class="container-fluid min-vh-100 d-flex justify-content-center align-items-center">
+    <div class="card p-4 shadow-sm w-100 rounded-4" style="max-width: 1200px;">
+        <h3 class="text-start mb-4">Reservation Summary</h3>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-white text-center">
+                <h5 class="mb-0 text-primary">
+                    <i class="bi bi-people-fill me-2"></i>Reservation History
+                </h5>
+            </div>
+
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped table-bordered mb-0 align-middle">
+                        <thead class="table-light text-center">
+                            <tr>
+                                <th>ID</th>
+                                <th>User</th>
+                                <th>Address</th>
+                                <th>Vehicle No.</th>
+                                <th>Spot ID</th>
+                                <th>Parking Time</th>
+                                <th>Leaving Time</th>
+                                <th>Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider text-center">
+                            {% for reserve in reserve_parking_spots %}
+                            <tr>
+                                <td>{{ reserve.id }}</td>
+                                <td>{{ reserve.user_id }}</td>
+                                <td>{{ reserve.address }}, {{ reserve.pincode }}</td>
+                                <td>{{ reserve.vehicle_no }}</td>
+                                <td>{{ reserve.spot.id }}</td>
+                                <td>{{ reserve.parking_timestamp }}</td>
+                                <td>
+                                    {% if reserve.leaving_timestamp %}
+                                        {{ reserve.leaving_timestamp }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if reserve.parking_cost %}
+                                        {{ reserve.parking_cost }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Now I want to add statstics graphs  
+        1.Revenue From Each Parking Lot
+        2.Summary on available and occupied parking spots 
+        -->
+        <div class="card shadow-sm mt-4">
+            <div class="card-header bg-white text-center">
+                <h5 class="mb-0 text-primary">
+                    <i class="bi bi-bar-chart-fill me-2"></i>Statistics
+                </h5>
+            </div>
+            <div class="card-body">
+        
+                <div class="my-5">
+                    <h5 class="text-center">Revenue from Each Parking Lot</h5>
+                    <div style="width: 100%; max-width: 800px; height: 400px; margin: 0 auto;">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="my-5 align-items-center">
+                    <h5 class="text-center">Parking Spot Status</h5>
+                    <div style="width: 100%; max-width: 800px; height: 400px; margin: 0 auto;" class="d-flex justify-content-center align-items-center">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Bar Chart: Revenue
+    const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+    new Chart(revenueCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ revenue_labels|tojson }},
+            datasets: [{
+                label: 'Total Revenue',
+                data: {{ revenue_values|tojson }},
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    // Pie Chart: Parking Spot Status
+    const statusCtx = document.getElementById('statusChart').getContext('2d');
+    new Chart(statusCtx, {
+        type: 'pie',
+        data: {
+            labels: {{ pie_labels|tojson }},
+            datasets: [{
+                data: {{ pie_values|tojson }},
+                backgroundColor: ['#28a745', '#dc3545'],
+                borderColor: '#fff',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+        }
+    });
+</script>
+
+
+
+{% endblock %}

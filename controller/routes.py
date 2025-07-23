@@ -392,109 +392,109 @@ def edit_profile(user_id):
     
 
 
-# @app.route('/summary_admin', methods=['GET'])
-# def summary_admin():
-#     if 'user_email' not in session or session.get('user_role', None) != 'admin':
-#         flash('Access denied! Admins only.', 'error')
-#         return redirect(url_for('home'))
+@app.route('/summary_admin', methods=['GET'])
+def summary_admin():
+    if 'user_email' not in session or session.get('user_role', None) != 'admin':
+        flash('Access denied! Admins only.', 'error')
+        return redirect(url_for('home'))
 
-#     reserve_parking_spots = ReserveParkingSpot.query.all()
-#     # --- Bar Chart Data: Revenue per parking lot (Manual Aggregation) ---
+    reserve_parking_spots = ReserveParkingSpot.query.all()
+    # --- Bar Chart Data: Revenue per parking lot (Manual Aggregation) ---
 
-#     revenue_labels = []
-#     revenue_values = []
+    revenue_labels = []
+    revenue_values = []
 
-#     parking_lots = ParkingLot.query.all()
+    parking_lots = ParkingLot.query.all()
 
-#     for lot in parking_lots:
-#         reservations = ReserveParkingSpot.query.filter_by(lot_id=lot.id).all()
-#         costs = [r.parking_cost for r in reservations]
+    for lot in parking_lots:
+        reservations = ReserveParkingSpot.query.filter_by(lot_id=lot.id).all()
+        costs = [r.parking_cost for r in reservations]
         
 
-#         total_revenue = sum([c or 0 for c in costs])
-#         revenue_labels.append(lot.prime_location_name)
-#         revenue_values.append(total_revenue)
+        total_revenue = sum([c or 0 for c in costs])
+        revenue_labels.append(lot.prime_location_name)
+        revenue_values.append(total_revenue)
 
-#     # If no data, fallback to default
-#     if not revenue_labels:
-#         revenue_labels = ['No Data']
-#         revenue_values = [0]
+    # If no data, fallback to default
+    if not revenue_labels:
+        revenue_labels = ['No Data']
+        revenue_values = [0]
 
 
         
 
-#     # --- Pie Chart Data: Available vs Occupied ---
+    # --- Pie Chart Data: Available vs Occupied ---
     
-#     total_spots = ParkingSpot.query.count()
-#     occupied_spots = ParkingSpot.query.filter_by(status='O').count()
+    total_spots = ParkingSpot.query.count()
+    occupied_spots = ParkingSpot.query.filter_by(status='O').count()
 
-#     available_spots = total_spots - occupied_spots
+    available_spots = total_spots - occupied_spots
 
-#     pie_labels = ['Available', 'Occupied']
-#     pie_values = [available_spots, occupied_spots]
+    pie_labels = ['Available', 'Occupied']
+    pie_values = [available_spots, occupied_spots]
 
-#     return render_template(
-#         'summary_admin.html',
-#         reserve_parking_spots=reserve_parking_spots,
-#         revenue_labels=revenue_labels,
-#         revenue_values=revenue_values,
-#         pie_labels=pie_labels,
-#         pie_values=pie_values
-#     )
+    return render_template(
+        'summary_admin.html',
+        reserve_parking_spots=reserve_parking_spots,
+        revenue_labels=revenue_labels,
+        revenue_values=revenue_values,
+        pie_labels=pie_labels,
+        pie_values=pie_values
+    )
 
 
-# @app.route('/summary_user', methods=['GET'])
-# def summary_user():
-#     if 'user_email' not in session:
-#         flash('Please log in to view your summary.', 'error')
-#         return redirect(url_for('home'))
-#     user_id = session.get('user_id')
-#     if not user_id:
-#         flash('User ID not found in session.', 'error')
-#         return redirect(url_for('home'))
-#     reserve_parking_spots = ReserveParkingSpot.query.filter_by(user_id=user_id).all()
-#     #Duration and Cost Calculation according to reservation_id
-#     duration = {}
-#     usage_count = {}
+@app.route('/summary_user', methods=['GET'])
+def summary_user():
+    if 'user_email' not in session:
+        flash('Please log in to view your summary.', 'error')
+        return redirect(url_for('home'))
+    user_id = session.get('user_id')
+    if not user_id:
+        flash('User ID not found in session.', 'error')
+        return redirect(url_for('home'))
+    reserve_parking_spots = ReserveParkingSpot.query.filter_by(user_id=user_id).all()
+    #Duration and Cost Calculation according to reservation_id
+    duration = {}
+    usage_count = {}
 
-#     for reservation in reserve_parking_spots:
-#         if reservation.leaving_timestamp:
-#             time_diff = reservation.leaving_timestamp - reservation.parking_timestamp
+    for reservation in reserve_parking_spots:
+        if reservation.leaving_timestamp:
+            time_diff = reservation.leaving_timestamp - reservation.parking_timestamp
             
-#             minutes = int(time_diff.total_seconds() / 60)  # Rounded down to nearest minute
-#             duration[reservation.id] = minutes
+            minutes = int(time_diff.total_seconds() / 60)  # Rounded down to nearest minute
+            duration[reservation.id] = minutes
             
-#             # reservation.parking_cost = total_cost
-#         else:
-#             duration[reservation.id] = 'Ongoing'
-#             reservation.parking_cost = 0
+            # reservation.parking_cost = total_cost
+        else:
+            duration[reservation.id] = 'Ongoing'
+            reservation.parking_cost = 0
 
-#     spot_usage_query = db.session.query(
-#         ReserveParkingSpot.spot_id, 
-#         func.count(ReserveParkingSpot.id).label('usage_count')
-#     ).filter_by(user_id=user_id).group_by(ReserveParkingSpot.spot_id).all()
+    spot_usage_query = db.session.query(
+        ReserveParkingSpot.spot_id, 
+        func.count(ReserveParkingSpot.id).label('usage_count')
+    ).filter_by(user_id=user_id).group_by(ReserveParkingSpot.spot_id).all()
 
-#     # Prepare data for Chart.js
-#     spot_labels = [f"Spot-{result.spot_id}" for result in spot_usage_query]
-#     spot_usage_counts = [result.usage_count for result in spot_usage_query]
-#     print("--- CHART DATA ---")
-#     print("Labels being sent to template:", spot_labels)
-#     print("Values being sent to template:", spot_usage_counts)
-#     print("--------------------")
+    # Prepare data for Chart.js
+    spot_labels = [f"Spot-{result.spot_id}" for result in spot_usage_query]
+    spot_usage_counts = [result.usage_count for result in spot_usage_query]
+    print("--- CHART DATA ---")
+    print("Labels being sent to template:", spot_labels)
+    print("Values being sent to template:", spot_usage_counts)
+    print("--------------------")
 
-#     # If no reservations, show a message
-#     if not reserve_parking_spots:
-#         flash('No reservations found for this user.', 'info')
-#         return redirect(url_for('home'))
+    # If no reservations, show a message
+    if not reserve_parking_spots:
+        flash('No reservations found for this user.', 'info')
+        return redirect(url_for('home'))
     
-#     # Create Bar Graph for Summary on already used parking spot
+    # Create Bar Graph for Summary on already used parking spot
     
     
 
-#     usage_labels = list(usage_count.keys())
-#     usage_values = list(usage_count.values())
-#     return render_template(
-#         'summary_user.html',
-#         reserve_parking_spots=reserve_parking_spots,
-#         user_id=user_id,duration=duration,usage_labels=spot_labels,
-#         usage_values=spot_usage_counts)
+    usage_labels = list(usage_count.keys())
+    usage_values = list(usage_count.values())
+    return render_template(
+        'summary_user.html',
+        reserve_parking_spots=reserve_parking_spots,
+        user_id=user_id,duration=duration,usage_labels=spot_labels,
+        usage_values=spot_usage_counts)

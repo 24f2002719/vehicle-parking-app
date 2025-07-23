@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% block title %}User Summary{% endblock %}
+
+{% block content %}
+<div class="container-fluid min-vh-100 d-flex justify-content-center align-items-center">
+    <div class="card p-4 shadow-sm w-100 rounded-4" style="max-width: 1200px;">
+        <h3 class="text-start mb-4">Reservation Summary</h3>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-white text-center">
+                <h5 class="mb-0 text-primary">
+                    <i class="bi bi-people-fill me-2"></i>Reservation History
+                </h5>
+            </div>
+
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped table-bordered mb-0 align-middle">
+                        <thead class="table-light text-center">
+                            <tr>
+                                <th>ID</th>
+                                <th>Address</th>
+                                <th>Vehicle No.</th>
+                                <th>Spot ID</th>
+                                <th>Parking Time</th>
+                                <th>Leaving Time</th>
+                                <th>Duration (in minute)</th>
+                                <th>Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider text-center">
+                            {% for reserve in reserve_parking_spots %}
+                            <tr>
+                                <td>{{ reserve.id }}</td>
+                                <td>{{ reserve.address }}, {{ reserve.pincode }}</td>
+                                <td>{{ reserve.vehicle_no }}</td>
+                                <td>{{ reserve.spot.id }}</td>
+                                <td>{{ reserve.parking_timestamp }}</td>
+                                <td>
+                                    {% if reserve.leaving_timestamp %}
+                                        {{ reserve.leaving_timestamp }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if duration %}
+                                        {{ duration[reserve.id] }} 
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if reserve.parking_cost %}
+                                        {{ reserve.parking_cost }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4 p-3 shadow-sm">
+            <h5 class="text-primary">Parking Spot Usage</h5>
+            
+            <div id="chart-container">
+                <canvas id="spotUsageChart" height="100"></canvas>
+            </div>
+        </div>
+
+
+
+        
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Log the data received from Flask to the browser console
+    const labels = {{ usage_labels|tojson }};
+    const values = {{ usage_values|tojson }};
+
+    console.log("Labels received by JavaScript:", labels);
+    console.log("Values received by JavaScript:", values);
+
+    // Check if there is data to display
+    if (labels.length > 0) {
+        const ctx = document.getElementById('spotUsageChart').getContext('2d');
+        const spotUsageChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels, 
+                datasets: [{
+                    label: 'Parking Spot Usage Count',
+                    data: values,
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            // Ensure Y-axis only shows whole numbers for counts
+                            stepSize: 1
+                        },
+                        title: {
+                            display: true,
+                            text: 'Number of Reservations'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Spot ID'
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Summary of Your Parking Spot Usage'
+                    }
+                }
+            }
+        });
+    } else {
+        // Optional: Display a message if there's no chart data
+        const chartArea = document.getElementById('spotUsageChart');
+        const parent = chartArea.parentNode;
+        parent.innerHTML = "<p class='text-center'>No parking usage data available to display a chart.</p>";
+    }
+</script>
+
+
+{% endblock %}

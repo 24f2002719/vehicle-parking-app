@@ -29,9 +29,13 @@
         <a href="/admin/search" class="btn btn-outline-info me-2">
           <i class="bi bi-search me-1"></i>Search
         </a>
-        
+        <a href="{{ url_for('summary_admin') }}" class="btn btn-outline-success me-2">
+          <i class="bi bi-bar-chart-fill me-1"></i>Summary
+        </a>
         {% else %}
-        
+        <a href="{{ url_for('summary_user')}}" class="btn btn-outline-success me-2">
+          <i class="bi bi-bar-chart-line-fill me-1"></i>Summary
+        </a>
         {% endif %}
         {% if session.get('user_id') %}
         <a href="{{ url_for('edit_profile', user_id=session.get('user_id')) }}" class="btn btn-outline-dark me-2">
