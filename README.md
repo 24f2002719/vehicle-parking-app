@@ -44,6 +44,7 @@ Charts are dynamically rendered from real-time backend data.
 
 ## 🗃️ Project Structure
 
+```bash
 ├── controller/
 │ ├── auth_routes.py # User authentication and role logic
 │ ├── config.py # Flask and DB configurations
@@ -58,31 +59,11 @@ Charts are dynamically rendered from real-time backend data.
 ├── .gitignore
 ├── README.md
 └── requirements.txt
+```
 
 
 ---
 
-## 🧾 Database Models (Overview)
-
-### User
-- Fields: `user_id`, `user_email`, `user_password`, `user_name`, `user_address`, `role_id`, etc.
-- Linked to: `Role`, `ReserveParkingSpot`
-
-### Role
-- Fields: `id`, `name` (Admin/User)
-
-### ParkingLot
-- Fields: `id`, `prime_location_name`, `address`, `pincode`, `maximum_number_of_spots`, `price`
-- Linked to: `ParkingSpot`, `ReserveParkingSpot`
-
-### ParkingSpot
-- Fields: `id`, `lot_id`, `status` (available/reserved)
-
-### ReserveParkingSpot
-- Fields: `spot_id`, `vehicle_no`, `parking_timestamp`, `leaving_timestamp`, `parking_cost`, etc.
-- Linked to: `User`, `ParkingSpot`, `ParkingLot`
-
----
 
 ## 🚀 Getting Started
 
@@ -105,11 +86,13 @@ pip install -r requirements.txt
 
 
 ### 4. Configure .env
+```bash
 FLASK_APP=main.py
 FLASK_ENV=development
 SECRET_KEY=your-secret-key
 SQLALCHEMY_DATABASE_URI=sqlite:///instance/parking.db
 SQLALCHEMY_TRACK_MODIFICATIONS=False
+```
 
 ### 5. Run command
 ```bash
