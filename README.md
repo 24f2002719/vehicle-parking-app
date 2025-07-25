@@ -30,6 +30,15 @@ It also features a **visual summary dashboard using Chart.js** to track parking 
 
 ---
 
+### Database Model Descriptions
+- **User** : Represents a registered user of the system (Admin or Customer).
+- **Role** : Defines roles (Admin, User). One role can be assigned to many users.
+-**ParkingLot**: Represents a parking location with address, capacity, and pricing.
+- **ParkingSpot** : Individual parking spot within a lot. Tracks availability status.
+- **ReserveParkingSpot** : Booking/reservation details: vehicle info, user, timestamps, cost.
+
+---
+
 ## 📊 Chart.js Dashboard
 
 The app includes a dashboard that uses **Chart.js** to show:
@@ -89,7 +98,7 @@ pip install -r requirements.txt
 ```bash
 FLASK_APP=main.py
 FLASK_ENV=development
-SECRET_KEY=your-secret-key
+SECRET_KEY=secret-key
 SQLALCHEMY_DATABASE_URI=sqlite:///instance/parking.db
 SQLALCHEMY_TRACK_MODIFICATIONS=False
 ```

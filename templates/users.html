@@ -26,7 +26,7 @@
           <tbody class="table-group-divider">
             {% for user in users %}
               <tr>
-                <td>{{ loop.index }}</td>
+                <td>{{ user.user_id }}</td>
                 <td>{{ user.user_email }}</td>
                 <td>{{ user.user_name }}</td>
                 <td>{{ user.user_address }}</td>

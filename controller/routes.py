@@ -517,6 +517,9 @@ def search_admin():
                     return redirect(url_for('home'))
                 else:
                     users = User.query.filter(User.role_id != 1 ).all()
+                    if parameter == 'user_id':
+                        users = User.query.filter(User.user_id.ilike(f'%{query}%') , User.role_id != 1)
+                        return render_template('search_admin.html', users=users)
                     return render_template('search_admin.html', users=users)
             return render_template('search_admin.html')
 
